@@ -1,0 +1,6 @@
+---
+- name: Restart Apache Debian
+  service: name=apache2 state=restarted
+
+- name: Restart Apache CentOS
+  service: name=httpd state=restarted

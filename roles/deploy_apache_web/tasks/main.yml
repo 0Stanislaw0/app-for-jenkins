@@ -1,0 +1,17 @@
+---
+- block:
+    - name: install apache2
+      apt:
+        name: apache2
+        state: present
+    - name: Start apache and enable it on every boot
+      service: name=apache2 state=started enabled=yes
+
+  when: ansible_os_family == "Debian"
+
+- name: copy index.html to servers
+  copy: src={{ item }} dest={{ destin_folder }} mode=0555
+  with_fileglob: "*.*"
+  notify:
+    - Restart Apache Debian
+    - Restart Apache CentOS

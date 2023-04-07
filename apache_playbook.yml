@@ -1,0 +1,31 @@
+---
+- name: Install default Apache web server
+  hosts: all
+  become: yes
+
+  vars:
+    source_file: ./mysite/index.html
+    destin_file: /var/www/html
+  tasks:
+  - block:
+      - name: install apache2
+        apt:
+          name: apache2
+          state: present
+      
+      - name: copy inde.html to servers
+        copy: src={{ source_file }} dest={{ destin_file }} mode=0555 
+        notify: Restart Apache Debian
+      
+      - name: Start apache and enable it on every boot
+        service: name=apache2 state=started enabled=yes
+        
+    when: ansible_os_family == "Debian"
+  
+
+  handlers:
+    - name: Restart Apache Debian
+      service: name=apache2 state=restarted
+
+
+
